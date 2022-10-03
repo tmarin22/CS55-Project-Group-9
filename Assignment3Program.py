@@ -24,6 +24,8 @@ def getElems(elements):
 
 
 def getIndis(elements):
+    ## Returns an array of arrays with information for all individuals in a gedcom file. 
+    ## Contents of Inner Array: [Individual ID (String), Name (String), Gender (String), Birth Date (String), Age (Int), Alive (Boolean), Death Date (String)]
     indis = []
     for elem in elements:
         tag = elem.get_tag()
@@ -58,6 +60,8 @@ def getIndis(elements):
 
 
 def getFams(elements, indis):
+    ## Returns an array of arrays with information for all families in a GEDCOM file
+    ## Contents of inner array: [Family ID (String), Married Date (String), Divorce Date (String), Husband ID (String), Husband Name (String), Wife ID (String), Wife Name (String), Array of Children IDs ([Strings])]
     fams = []
     for elem in elements:
         tag = elem.get_tag()
@@ -207,6 +211,9 @@ def main():
     fams = getFams(elements, indis)
     mbD = marriageBeforeDeath(fams, indis)
     uniqueIDs = unique_ID(indis, fams)
+    dbD = divorceBeforeDeath(fams, indis)
+    bigamy = noBigamy(fams, indis)
+
 
     indiStrings = []
 
