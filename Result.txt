@@ -1,0 +1,19 @@
+Individuals: 
+
+ID: @I6000000178674878823@ | Name: Tayler Marin | Gender: M | Birthdate: 6 JAN 2000 | Age: 22 | Alive: True | Death Date: N/A
+ID: @I6000000178674323843@ | Name: Richard Marin | Gender: M | Birthdate: 2 DEC 1972 | Age: 50 | Alive: True | Death Date: N/A
+ID: @I6000000178674423835@ | Name: Mia Miyares | Gender: F | Birthdate: 28 JAN 1972 | Age: 50 | Alive: True | Death Date: N/A
+ID: @I6000000178674344894@ | Name: Diana Diaz | Gender: F | Birthdate: 17 JUN 1972 | Age: 50 | Alive: False | Death Date: 10 DEC 1993
+ID: @I6000000178674012894@ | Name: Aisha Marin | Gender: F | Birthdate: 20 NOV 1990 | Age: 32 | Alive: True | Death Date: N/A
+ID: @I6000000178675864831@ | Name: Richie Marin | Gender: M | Birthdate: 10 NOV 1992 | Age: 30 | Alive: True | Death Date: N/A
+ID: @I6000000178674234898@ | Name: Nelson Marin | Gender: M | Birthdate: 25 AUG 1955 | Age: 67 | Alive: False | Death Date: 2 FEB 2005
+ID: @I6000000178675557823@ | Name: Irma Martell | Gender: F | Birthdate: 21 JUN 1954 | Age: 68 | Alive: False | Death Date: 7 SEP 2014
+ID: @I6000000178673736875@ | Name: Carlos Miyares | Gender: M | Birthdate: 18 MAY 1931 | Age: 91 | Alive: False | Death Date: 23 JUL 1996
+ID: @I6000000178675392822@ | Name: Karen Miyares | Gender: F | Birthdate: 24 APR 1941 | Age: 81 | Alive: True | Death Date: N/A
+
+Families: 
+
+ID: @F6000000178674323848@ | Married: 4 JUL 1998 | Divorced: 7 MAY 2005 | Husband ID: @I6000000178674323843@ | Husband Name: Richard Marin | Wife ID: @I6000000178674423835@ | Wife Name: Mia Miyares | Children: [ @I6000000178674878823@ ]
+ID: @F6000000178674344900@ | Married: 15 AUG 1989 | Divorced: N/A | Husband ID: @I6000000178674323843@ | Husband Name: Richard Marin | Wife ID: @I6000000178674344894@ | Wife Name: Diana Diaz | Children: [ @I6000000178674012894@, @I6000000178675864831@ ]
+ID: @F6000000178674234904@ | Married: 25 DEC 2004 | Divorced: N/A | Husband ID: @I6000000178674234898@ | Husband Name: Nelson Marin | Wife ID: @I6000000178675557823@ | Wife Name: Irma Martell | Children: [ @I6000000178674323843@ ]
+ID: @F6000000178673736881@ | Married: 18 APR 1968 | Divorced: 19 JUN 1975 | Husband ID: @I6000000178673736875@ | Husband Name: Carlos Miyares | Wife ID: @I6000000178675392822@ | Wife Name: Karen Miyares | Children: [ @I6000000178674423835@ ]

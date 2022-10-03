@@ -1,8 +1,12 @@
 from gedcom.element.individual import IndividualElement
 from gedcom.parser import Parser
 from gedcom.element.element import Element
+from datetime import datetime
 
 def getElems(elements):
+    accepted_tags = ["INDI", "NAME", "SEX", "BIRT", "DEAT", "FAMC", "FAMS",
+                        "FAM", "MARR", "HUSB", "WIFE", "CHIL", "DIV", "DATE",
+                         "HEAD", "TRLR", "NOTE"]
     lines = []
     for elem in elements:
         lines.append(elem.to_gedcom_string())
@@ -95,14 +99,50 @@ def getFams(elements, indis):
 
             
     return fams
+
+def marriageBeforeDeath(fams, indis):
+    for fam in fams:
+        marriedDate = datetime.strptime(fam[1], '%d %b %Y').date()
+        husbID = fam[3]
+        wifeID = fam[5]
+        for indi in indis:
+            ID = indi[0]
+            if(ID == husbID):
+                if(not indi[5]):
+                    deathdate = datetime.strptime(indi[6], '%d %b %Y').date()
+                    if(deathdate < marriedDate):
+                        print('Error: Husband named ' + indi[1] + ' of family ' + fam[0] + ' has a death date before marriage \n')
+                        print("Death Date: " + indi[6] + " | Marriage Date: " + fam[1])
+                        return False
+            if(ID == wifeID):
+                if(not indi[5]):
+                    deathdate = datetime.strptime(indi[6], '%d %b %Y').date()
+                    if(deathdate < marriedDate):
+                        print("Error: Wife named " + indi[1] + " of family " + fam[0] + " has a death date before marriage \n")
+                        print("Death Date: " + indi[6] + " | Marriage Date: " + fam[1])
+                        return False
+    print("All Marriage dates are before Death dates of spouses")
+    return True
+
+def unique_ID(indis, fams):
+    for i in range(len(indis)):
+        indi = indis[i]
+        for j in range(i+1, len(indis)):
+            nextIndi = indis[j]
+            if(indi[0] == nextIndi[0]):
+                print(indi[1] + " has the same individual ID as " + nextIndi[1])
+                return False
+    for i in range(len(fams)):
+        fam = fams[i]
+        for j in range(i+1, len(fams)):
+            nextFam = fams[j]
+            if(fam[0] == nextFam[0]):
+                return False
+    print("All IDs are unique")
+    return True
             
 def main():
     file_path = 'ProjectSampleGedcom.ged'
-
-    accepted_tags = ["INDI", "NAME", "SEX", "BIRT", "DEAT", "FAMC", "FAMS",
-                        "FAM", "MARR", "HUSB", "WIFE", "CHIL", "DIV", "DATE",
-                         "HEAD", "TRLR", "NOTE"]
-
 
     lines = []
 
@@ -111,6 +151,8 @@ def main():
     elements = gedcom_parser.get_element_list()
     indis = getIndis(elements)
     fams = getFams(elements, indis)
+    mbD = marriageBeforeDeath(fams, indis)
+    uniqueIDs = unique_ID(indis, fams)
 
     indiStrings = []
 
