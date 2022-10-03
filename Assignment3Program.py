@@ -3,30 +3,32 @@ from gedcom.parser import Parser
 from gedcom.element.element import Element
 from datetime import datetime
 
+
 def getElems(elements):
     accepted_tags = ["INDI", "NAME", "SEX", "BIRT", "DEAT", "FAMC", "FAMS",
-                        "FAM", "MARR", "HUSB", "WIFE", "CHIL", "DIV", "DATE",
-                         "HEAD", "TRLR", "NOTE"]
+                     "FAM", "MARR", "HUSB", "WIFE", "CHIL", "DIV", "DATE",
+                     "HEAD", "TRLR", "NOTE"]
     lines = []
     for elem in elements:
         lines.append(elem.to_gedcom_string())
         level = elem.get_level()
         tag = elem.get_tag()
         accepted = "N"
-        
+
         if tag in accepted_tags:
-                accepted = "Y"
-        
+            accepted = "Y"
+
         value = elem.get_value()
         string = str(level) + "|" + tag + "|" + accepted + "|" + value + "\n"
         lines.append(string)
+
 
 def getIndis(elements):
     indis = []
     for elem in elements:
         tag = elem.get_tag()
         if (tag == "INDI"):
-            ## GET ALL INDIVIDUALS AND IDS
+            # GET ALL INDIVIDUALS AND IDS
             ptr = elem.get_pointer()
             infoArr = []
             nameTup = elem.get_name()
@@ -50,11 +52,10 @@ def getIndis(elements):
             else:
                 infoArr.append("N/A")
             indis.append(infoArr)
-    ##SORT INDIVIDUALS
+    # SORT INDIVIDUALS
 
-  
-    
     return indis
+
 
 def getFams(elements, indis):
     fams = []
@@ -87,7 +88,7 @@ def getFams(elements, indis):
                             famInfo.append(indi[0])
                             famInfo.append(indi[1])
                 if(fTag == "WIFE"):
-                   for indi in indis:
+                    for indi in indis:
                         if(indi[0] == fEPtr):
                             famInfo.append(indi[0])
                             famInfo.append(indi[1])
@@ -95,10 +96,10 @@ def getFams(elements, indis):
                     children.append(fEPtr)
             famInfo.append(children)
             fams.append(famInfo)
-    ##SORT FAMILIES
+    # SORT FAMILIES
 
-            
     return fams
+
 
 def marriageBeforeDeath(fams, indis):
     for fam in fams:
@@ -111,18 +112,70 @@ def marriageBeforeDeath(fams, indis):
                 if(not indi[5]):
                     deathdate = datetime.strptime(indi[6], '%d %b %Y').date()
                     if(deathdate < marriedDate):
-                        print('Error: Husband named ' + indi[1] + ' of family ' + fam[0] + ' has a death date before marriage \n')
-                        print("Death Date: " + indi[6] + " | Marriage Date: " + fam[1])
+                        print('Error: Husband named ' +
+                              indi[1] + ' of family ' + fam[0] + ' has a death date before marriage \n')
+                        print("Death Date: " +
+                              indi[6] + " | Marriage Date: " + fam[1])
                         return False
             if(ID == wifeID):
                 if(not indi[5]):
                     deathdate = datetime.strptime(indi[6], '%d %b %Y').date()
                     if(deathdate < marriedDate):
-                        print("Error: Wife named " + indi[1] + " of family " + fam[0] + " has a death date before marriage \n")
-                        print("Death Date: " + indi[6] + " | Marriage Date: " + fam[1])
+                        print("Error: Wife named " + indi[1] + " of family " +
+                              fam[0] + " has a death date before marriage \n")
+                        print("Death Date: " +
+                              indi[6] + " | Marriage Date: " + fam[1])
                         return False
     print("All Marriage dates are before Death dates of spouses")
     return True
+
+
+def divorceBeforeDeath(fams, indis):
+    for fam in fams:
+        if(fam[2] != "N/A"):
+            divorcedDate = datetime.strptime(fam[2], '%d %b %Y').date()
+            husbID = fam[3]
+            wifeID = fam[5]
+            for indi in indis:
+                ID = indi[0]
+                if(ID == husbID):
+                    if(not indi[5]):
+                        deathdate = datetime.strptime(
+                            indi[6], '%d %b %Y').date()
+                        if(deathdate < divorcedDate):
+                            print(
+                                "Error: Husband named " + indi[1] + " of family " + fam[0] + " has a death date before divorce \n")
+                            print("Death Date: " +
+                                  indi[6] + " | Divorce Date: " + fam[2])
+                            return False
+                if(ID == wifeID):
+                    if(not indi[5]):
+                        deathdate = datetime.strptime(
+                            indi[6], '%d %b %Y').date()
+                        if(deathdate < divorcedDate):
+                            print(
+                                "Error: Wife named " + indi[1] + " of family " + fam[0] + " has a death date before divorce \n")
+                            print("Death Date: " +
+                                  indi[6] + " | Divorce Date: " + fam[2])
+                            return False
+    print("All Divorce dates are before Death dates of spouses")
+    return True
+
+
+def noBigamy(fams, indis):
+    """individuals cannot be married to more than one individual at a time"""
+    for indi in indis:
+        marriages = []
+        for fam in fams:
+            if(indi[0] == fam[3] or indi[0] == fam[5]):
+                marriages.append(fam[1])
+        if(len(marriages) > 1):
+            print("Error: Individual " +
+                  indi[1] + " is married more than once")
+            return False
+    print("No individuals are married more than once")
+    return True
+
 
 def unique_ID(indis, fams):
     for i in range(len(indis)):
@@ -140,7 +193,8 @@ def unique_ID(indis, fams):
                 return False
     print("All IDs are unique")
     return True
-            
+
+
 def main():
     file_path = 'ProjectSampleGedcom.ged'
 
@@ -157,7 +211,9 @@ def main():
     indiStrings = []
 
     for indi in indis:
-        string = "ID: " + indi[0] + " | Name: " + indi[1] + " | Gender: " + indi[2] + " | Birthdate: " + indi[3] + " | Age: " + str(indi[4]) + " | Alive: " + str(indi[5]) + " | Death Date: " + indi[6] + "\n"
+        string = "ID: " + indi[0] + " | Name: " + indi[1] + " | Gender: " + indi[2] + " | Birthdate: " + \
+            indi[3] + " | Age: " + str(indi[4]) + " | Alive: " + \
+            str(indi[5]) + " | Death Date: " + indi[6] + "\n"
         indiStrings.append(string)
 
     famStrings = []
@@ -168,9 +224,11 @@ def main():
         for i in range(len(children)):
             listStr = listStr + children[i]
             if(i != len(children)-1):
-               listStr = listStr + ", "
+                listStr = listStr + ", "
         listStr = listStr + " ]"
-        string = "ID: " + fam[0] + " | Married: " + fam[1] + " | Divorced: " + fam[2] + " | Husband ID: " + fam[3] + " | Husband Name: " + fam[4] + " | Wife ID: " + fam[5] + " | Wife Name: " + fam[6] + " | Children: " + listStr + "\n"
+        string = "ID: " + fam[0] + " | Married: " + fam[1] + " | Divorced: " + fam[2] + " | Husband ID: " + fam[3] + \
+            " | Husband Name: " + fam[4] + " | Wife ID: " + fam[5] + \
+            " | Wife Name: " + fam[6] + " | Children: " + listStr + "\n"
         famStrings.append(string)
 
     with open("Result.txt", 'w') as f:
@@ -181,15 +239,7 @@ def main():
         f.write("Families: \n")
         f.write("\n")
         f.writelines(famStrings)
-        
+
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
-    
-    
-    
