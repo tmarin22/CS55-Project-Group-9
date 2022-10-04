@@ -2,7 +2,7 @@ from gedcom.element.individual import IndividualElement
 from gedcom.parser import Parser
 from gedcom.element.element import Element
 from datetime import datetime
-
+from dateutil.relativedelta import relativedelta
 
 def getElems(elements):
     accepted_tags = ["INDI", "NAME", "SEX", "BIRT", "DEAT", "FAMC", "FAMS",
@@ -198,9 +198,47 @@ def unique_ID(indis, fams):
     print("All IDs are unique")
     return True
 
+# birth before date 
+
+def birthBeforeDeath(indis):
+    for indi in indis:
+        if(indi[3] != "N/A"):
+            birthdate = datetime.strptime(indi[3], '%d %b %Y').date()
+        if(indi[6] != "N/A"):
+            deathdate = datetime.strptime(indi[6], '%d %b %Y').date()
+            if(deathdate < birthdate):
+                print(
+                    "Error:" + indi[1] + "was death before being born \n")
+                return False
+    print("All birth dates are before death dates")
+    return True 
+
+#US10	Marriage after 14
+def marriageAfter14(fams, indis):
+    
+    for indi in indis:
+        marriages = []
+        age=[]
+        for fam in fams:
+            if(indi[0] == fam[3] or indi[0] == fam[5]):
+                married = datetime.strptime(fam[1], '%d %b %Y')
+                #print(married)
+                bornDate = datetime.strptime(indi[3], '%d %b %Y')
+                #print(bornDate)
+                #print("individual " + indi[1] + " was married on " + fam[1])
+                #difference = (married - bornDate).days
+                difference = relativedelta(married,bornDate)
+                differenceinYears= difference.years
+                #print(differenceinYears)
+                if(differenceinYears < 14):
+                   print("The individual" + indi[0] + "was married before 14")
+    print("No individuals were married before 14")
+    return True
+
 
 def main():
     file_path = 'ProjectSampleGedcom.ged'
+    #file_path = 'C:\ProjectSampleGedcom.ged' # for PDS to run in her PC
 
     lines = []
 
@@ -213,6 +251,8 @@ def main():
     uniqueIDs = unique_ID(indis, fams)
     dbD = divorceBeforeDeath(fams, indis)
     bigamy = noBigamy(fams, indis)
+    bbD = birthBeforeDeath(indis)
+    mA14= marriageAfter14(fams, indis)
 
 
     indiStrings = []
@@ -246,7 +286,5 @@ def main():
         f.write("Families: \n")
         f.write("\n")
         f.writelines(famStrings)
-
-
 if __name__ == "__main__":
     main()
