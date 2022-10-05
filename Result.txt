@@ -17,3 +17,10 @@ ID: @F6000000178674323848@ | Married: 4 JUL 1998 | Divorced: 7 MAY 2005 | Husban
 ID: @F6000000178674344900@ | Married: 15 AUG 1989 | Divorced: N/A | Husband ID: @I6000000178674323843@ | Husband Name: Richard Marin | Wife ID: @I6000000178674344894@ | Wife Name: Diana Diaz | Children: [ @I6000000178674012894@, @I6000000178675864831@ ]
 ID: @F6000000178674234904@ | Married: 25 DEC 2004 | Divorced: N/A | Husband ID: @I6000000178674234898@ | Husband Name: Nelson Marin | Wife ID: @I6000000178675557823@ | Wife Name: Irma Martell | Children: [ @I6000000178674323843@ ]
 ID: @F6000000178673736881@ | Married: 18 APR 1968 | Divorced: 19 JUN 1975 | Husband ID: @I6000000178673736875@ | Husband Name: Carlos Miyares | Wife ID: @I6000000178675392822@ | Wife Name: Karen Miyares | Children: [ @I6000000178674423835@ ]
+
+All Marriage dates are before Death dates of spouses
+All IDs are unique
+All Divorce dates are before Death dates of spouses
+No bigamy
+No individuals were married before 14
+All birth dates are before death dates
