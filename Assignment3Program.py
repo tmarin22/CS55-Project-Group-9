@@ -202,7 +202,7 @@ def unique_ID(indis, fams):
         fam = fams[i]
         for j in range(i+1, len(fams)):
             nextFam = fams[j]
-            if (fam[0] == nextFam[0]):
+            if(fam[0] == nextFam[0]):
                 return False
     print("All IDs are unique")
     return True
@@ -263,8 +263,6 @@ def main():
     uniqueIDs = unique_ID(indis, fams)
     dbD = divorceBeforeDeath(fams, indis)
     bigamy = noBigamy(fams, indis)
-    bbD = birthBeforeDeath(indis)
-    mA14 = marriageAfter14(fams, indis)
 
     indiStrings = []
 
