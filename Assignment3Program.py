@@ -135,6 +135,39 @@ def marriageBeforeDeath(fams, indis):
     return True
 
 
+def parentsNotTooOld(fams, indis):
+    """Mother should be less than 60 years older than her children and father should be less than 80 years older than his children"""
+    for fam in fams:
+        children = fam[7]
+        for child in children:
+            for indi in indis:
+                if (indi[0] == child):
+                    childAge = indi[4]
+                    motherID = fam[5]
+                    fatherID = fam[3]
+                    for indi in indis:
+                        if (indi[0] == motherID):
+                            motherAge = indi[4]
+                            ageDiff = childAge - motherAge
+                            if (ageDiff > 60):
+                                print("Error: Mother named " + indi[1] + " of family " +
+                                      fam[0] + " is more than 60 years older than her child \n")
+                                print("Mother's Age: " + str(motherAge) +
+                                      " | Child's Age: " + str(childAge))
+                                return False
+                        if (indi[0] == fatherID):
+                            fatherAge = indi[4]
+                            ageDiff = childAge - fatherAge
+                            if (ageDiff > 80):
+                                print("Error: Father named " + indi[1] + " of family " +
+                                      fam[0] + " is more than 80 years older than his child \n")
+                                print("Father's Age: " + str(fatherAge) +
+                                      " | Child's Age: " + str(childAge))
+                                return False
+    print("All parents are not too old")
+    return True
+
+
 def divorceBeforeDeath(fams, indis):
     for fam in fams:
         if (fam[2] != "N/A"):
@@ -202,7 +235,7 @@ def unique_ID(indis, fams):
         fam = fams[i]
         for j in range(i+1, len(fams)):
             nextFam = fams[j]
-            if(fam[0] == nextFam[0]):
+            if (fam[0] == nextFam[0]):
                 return False
     print("All IDs are unique")
     return True
@@ -263,6 +296,7 @@ def main():
     uniqueIDs = unique_ID(indis, fams)
     dbD = divorceBeforeDeath(fams, indis)
     bigamy = noBigamy(fams, indis)
+    parents_not_too_old = parentsNotTooOld(fams, indis)
 
     indiStrings = []
 
