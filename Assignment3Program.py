@@ -419,8 +419,8 @@ def checkSiblingNumber(fams):
 
 
 def main():
-    #file_path = 'ProjectSampleGedcom.ged'
-    file_path = 'C:\ProjectSampleGedcom.ged' # for PDS to run in her PC
+    file_path = 'ProjectSampleGedcom.ged'
+    ##file_path = 'C:\ProjectSampleGedcom.ged' # for PDS to run in her PC
 
     lines = []
 
