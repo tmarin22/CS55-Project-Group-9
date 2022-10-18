@@ -429,17 +429,19 @@ def main():
     elements = gedcom_parser.get_element_list()
     indis = getIndis(elements)
     fams = getFams(elements, indis)
-    mbD = marriageBeforeDeath(fams, indis)
-    uniqueIDs = unique_ID(indis, fams)
-    dbD = divorceBeforeDeath(fams, indis)
-    bigamy = noBigamy(fams, indis)
-    parents_not_too_old = parentsNotTooOld(fams, indis)
-    marrBefore14 = marriageAfter14(fams, indis)
-    bBD = birthBeforeDeath(indis)
-    birthBeforeParentsDeath = birthBeforeDeathofParents(fams, indis)
-    beforeCurrent = datesBeforeCurrent(fams, indis)
-    hFL = hasFatherLastname(fams, indis)
-    cSN= checkSiblingNumber(fams)
+    mbD = marriageBeforeDeath(fams, indis) #
+    uniqueIDs = unique_ID(indis, fams) #
+    dbD = divorceBeforeDeath(fams, indis) #
+    bigamy = noBigamy(fams, indis) #
+    parents_not_too_old = parentsNotTooOld(fams, indis) #
+    marrBefore14 = marriageAfter14(fams, indis) #
+    bBD = birthBeforeDeath(indis) #
+    birthBeforeParentsDeath = birthBeforeDeathofParents(fams, indis) #
+    beforeCurrent = datesBeforeCurrent(fams, indis) #
+    hFL = hasFatherLastname(fams, indis) #
+    cSN = checkSiblingNumber(fams) 
+    dates = noIllegitimateDateFormats(indis, fams)
+
 
     indiStrings = []
 

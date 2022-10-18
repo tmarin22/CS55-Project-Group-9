@@ -19,9 +19,6 @@ class TestGedcom(unittest.TestCase):
     def testDivorceBeforeDeath(self):
         self.assertTrue(divorceBeforeDeath(fams, indis))
 
-    def testNoBigamy(self):
-        self.assertTrue(noBigamy(fams, indis))
-
     def testUniqueIDs(self):
         self.assertTrue(unique_ID(indis, fams))
 
@@ -30,6 +27,24 @@ class TestGedcom(unittest.TestCase):
 
     def testMarriageAfter14(self):
         self.assertTrue(marriageAfter14(fams, indis))
+
+    def testParentsNotTooOld(self):
+        self.assertTrue(parentsNotTooOld(fams, indis))
+
+    def testBirthBeforeDeathOfParents(self):
+        self.assertTrue(birthBeforeDeathofParents(fams, indis))
+
+    def testDatesBeforeCurrent(self):
+        self.assertTrue(datesBeforeCurrent(fams, indis))
+
+    def testHasFatherLastname(self):
+        self.assertTrue(hasFatherLastname(fams, indis))
+    
+    def testCheckSiblingNumber(self):
+        self.assertTrue(checkSiblingNumber(fams))
+    
+    def testNoIllegitimateDateFormats(self):
+        self.assertTrue(noIllegitimateDateFormats(indis, fams))
 
 
 if __name__ == '__main__':
