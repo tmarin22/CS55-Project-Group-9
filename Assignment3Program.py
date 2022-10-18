@@ -370,10 +370,57 @@ def noIllegitimateDateFormats(indis, fams):
                 errOut = False
     return errOut
 
+def hasFatherLastname(fams, indis):
+    errOut = True
+    parentsAndChilds = []
+    for fam in fams:
+        children = fam[7]
+        for child in children:
+            for indi in indis:
+                if (indi[0] != child):
+                    continue
+                else:
+                    familyId = fam[0]
+                    parentName = fam[4]
+                    childName = indi[1]
+                    parentsAndChilds.append([familyId,parentName,childName])
+
+    hasLastaName = []
+    for parentAndChild in parentsAndChilds:
+        parentLastName = parentAndChild[1]
+        parentLastName = parentLastName.split(" ")[1];
+
+        childLastName = parentAndChild[2]
+        childLastName = childLastName.split(" ")[1]
+        if parentLastName != childLastName:
+            hasLastaName.append([parentAndChild, "No"])
+        else:
+            hasLastaName.append([parentAndChild, "Yes"])
+
+    listUniques = []
+    for value in  hasLastaName:
+        if (value[1] == "No"):
+            errors.append("The individual "+ value[0][0]+ " does not have father lastname"+  "\n")
+            errOut = False
+        else:
+            continue
+    return  errOut
+
+# fewer than 15 siblings 
+
+def checkSiblingNumber(fams):
+    errOut = True
+    for fam in fams:
+        if(len(fam[7])  > 15):
+            errors.append("More than 15 siblings")
+            errOut = False
+    #print("No more than 15 siblings")
+    return errOut
+
 
 def main():
-    file_path = 'ProjectSampleGedcom.ged'
-    # file_path = 'C:\ProjectSampleGedcom.ged' # for PDS to run in her PC
+    #file_path = 'ProjectSampleGedcom.ged'
+    file_path = 'C:\ProjectSampleGedcom.ged' # for PDS to run in her PC
 
     lines = []
 
@@ -391,6 +438,8 @@ def main():
     bBD = birthBeforeDeath(indis)
     birthBeforeParentsDeath = birthBeforeDeathofParents(fams, indis)
     beforeCurrent = datesBeforeCurrent(fams, indis)
+    hFL = hasFatherLastname(fams, indis)
+    cSN= checkSiblingNumber(fams)
 
     indiStrings = []
 
@@ -438,9 +487,12 @@ def main():
             f.write("No individuals were married before 14\n")
         if(bBD):
             f.write("All birth dates are before death dates\n")
+        if(hFL):
+            f.write("All individuals have their father lastname\n")
+        if(cSN):
+            f.write("No more than 15 siblings\n")   
         if(len(errors) > 0):
             f.writelines(errors)
-
 
 if __name__ == "__main__":
     main()
