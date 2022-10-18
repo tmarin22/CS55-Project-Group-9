@@ -112,7 +112,7 @@ def getFams(elements, indis):
 def marriageBeforeDeath(fams, indis):
     errOut = True
     for fam in fams:
-        marriedDate = getDate(fam[1])
+        marriedDate = datetime.strptime(fam[1], '%d %b %Y').date()
         husbID = fam[3]
         wifeID = fam[5]
         for indi in indis:
