@@ -346,7 +346,7 @@ def noIllegitimateDateFormats(indis, fams):
                 errors.append("Error: Individual " +
                               indi[1] + " has an invalid birth date\n")
                 errOut = False
-        if (indi[4] != "N/A"):
+        if (indi[6] != "N/A"):
             try:
                 datetime.strptime(indi[6], '%d %b %Y')
             except ValueError:
@@ -492,7 +492,15 @@ def main():
         if(hFL):
             f.write("All individuals have their father lastname\n")
         if(cSN):
-            f.write("No more than 15 siblings\n")   
+            f.write("No more than 15 siblings\n")
+        if(parents_not_too_old):
+            f.write("Fathers are less than 80 years and mothers are less than 60 years old for birth of all children\n")
+        if(birthBeforeParentsDeath):
+            f.write("All children born before death of mothers and no more than 9 months after fathers death\n")
+        if(beforeCurrent):
+            f.write("All dates occur before today's date\n")
+        if(dates):
+            f.write("All dates are of the correct format\n")
         if(len(errors) > 0):
             f.writelines(errors)
 

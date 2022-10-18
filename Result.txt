@@ -24,3 +24,9 @@ All Divorce dates are before Death dates of spouses
 No bigamy
 No individuals were married before 14
 All birth dates are before death dates
+All individuals have their father lastname
+No more than 15 siblings
+Fathers are less than 80 years and mothers are less than 60 years old for birth of all children
+All children born before death of mothers and no more than 9 months after fathers death
+All dates occur before today's date
+All dates are of the correct format
