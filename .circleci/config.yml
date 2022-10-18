@@ -18,6 +18,6 @@ jobs:
           path: test-results
           
 workflows:
-  testing_triangles:
+  testing_user_stories:
     jobs:
       - build-and-test
