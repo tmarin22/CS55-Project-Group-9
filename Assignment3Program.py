@@ -5,17 +5,8 @@ from gedcom.element.element import Element
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
-def getDate(var):
-    return datetime.strptime(var, '%d %b %Y').date()
-
-
 errors = []
 
-def compareDates(laterDate, earlierDate, errorMsg):
-    if(laterDate < earlierDate):
-        errors.append(errorMsg)
-        return False
-    return True
 
 def getElems(elements):
     accepted_tags = ["INDI", "NAME", "SEX", "BIRT", "DEAT", "FAMC", "FAMS",
@@ -128,15 +119,56 @@ def marriageBeforeDeath(fams, indis):
             ID = indi[0]
             if (ID == husbID):
                 if (not indi[5]):
-                    deathdate = getDate(indi[6])
-                    errorMsg = 'Error: Husband named ' + indi[1] + ' of family ' + fam[0] + ' has a death date before marriage || Death Date: ' + indi[6] + ' | Marriage Date: ' + fam[1] + '\n'
-                    errOut = compareDates(deathdate, marriedDate, errorMsg)
+                    deathdate = datetime.strptime(indi[6], '%d %b %Y').date()
+                    if (deathdate < marriedDate):
+                        errors.append('Error: Husband named ' +
+                                      indi[1] + ' of family ' + fam[0] + ' has a death date before marriage || ')
+                        errors.append("Death Date: " +
+                                      indi[6] + " | Marriage Date: " + fam[1] + "\n")
+                        errOut = False
             if (ID == wifeID):
                 if (not indi[5]):
-                    deathdate = getDate(indi[6])
-                    errorMsg = "Error: Wife named " + indi[1] + " of family " + fam[0] + " has a death date before marriage || Death Date: " + indi[6] + " | Marriage Date: " + fam[1] + "\n"
-                    errOut = compareDates(deathdate, marriedDate, errorMsg)
+                    deathdate = datetime.strptime(indi[6], '%d %b %Y').date()
+                    if (deathdate < marriedDate):
+                        errors.append("Error: Wife named " + indi[1] + " of family " +
+                                      fam[0] + " has a death date before marriage || ")
+                        errors.append("Death Date: " +
+                                      indi[6] + " | Marriage Date: " + fam[1] + "\n")
+                        errOut = False
     return errOut
+
+
+def parentsNotTooOld(fams, indis):
+    """Mother should be less than 60 years older than her children and father should be less than 80 years older than his children"""
+    for fam in fams:
+        children = fam[7]
+        for child in children:
+            for indi in indis:
+                if (indi[0] == child):
+                    childAge = indi[4]
+                    motherID = fam[5]
+                    fatherID = fam[3]
+                    for indi in indis:
+                        if (indi[0] == motherID):
+                            motherAge = indi[4]
+                            ageDiff = childAge - motherAge
+                            if (ageDiff > 60):
+                                print("Error: Mother named " + indi[1] + " of family " +
+                                      fam[0] + " is more than 60 years older than her child \n")
+                                print("Mother's Age: " + str(motherAge) +
+                                      " | Child's Age: " + str(childAge))
+                                return False
+                        if (indi[0] == fatherID):
+                            fatherAge = indi[4]
+                            ageDiff = childAge - fatherAge
+                            if (ageDiff > 80):
+                                print("Error: Father named " + indi[1] + " of family " +
+                                      fam[0] + " is more than 80 years older than his child \n")
+                                print("Father's Age: " + str(fatherAge) +
+                                      " | Child's Age: " + str(childAge))
+                                return False
+    print("All parents are not too old")
+    return True
 
 
 def divorceBeforeDeath(fams, indis):
@@ -156,7 +188,7 @@ def divorceBeforeDeath(fams, indis):
                             errors.append(
                                 "Error: Husband named " + indi[1] + " of family " + fam[0] + " has a death date before divorce || ")
                             errors.append("Death Date: " +
-                                  indi[6] + " | Divorce Date: " + fam[2] + "\n")
+                                          indi[6] + " | Divorce Date: " + fam[2] + "\n")
                             errOut = False
                 if (ID == wifeID):
                     if (not indi[5]):
@@ -166,7 +198,7 @@ def divorceBeforeDeath(fams, indis):
                             errors.append(
                                 "Error: Wife named " + indi[1] + " of family " + fam[0] + " has a death date before divorce || ")
                             errors.append("Death Date: " +
-                                  indi[6] + " | Divorce Date: " + fam[2] + "\n")
+                                          indi[6] + " | Divorce Date: " + fam[2] + "\n")
                             errOut = False
     return errOut
 
@@ -201,14 +233,16 @@ def unique_ID(indis, fams):
         for j in range(i+1, len(indis)):
             nextIndi = indis[j]
             if (indi[0] == nextIndi[0]):
-                errors.append(indi[1] + " has the same individual ID as " + nextIndi[1] + "\n")
+                errors.append(
+                    indi[1] + " has the same individual ID as " + nextIndi[1] + "\n")
                 errorOut = False
     for i in range(len(fams)):
         fam = fams[i]
         for j in range(i+1, len(fams)):
             nextFam = fams[j]
             if(fam[0] == nextFam[0]):
-                errors.append("Family with husband ID " + fam[3] + " and wife ID " + fam[5] + " has same ID as family with husband ID " + nextFam[3] + "and wife ID " + nextFam[5] + "\n")
+                errors.append("Family with husband ID " + fam[3] + " and wife ID " + fam[5] +
+                              " has same ID as family with husband ID " + nextFam[3] + "and wife ID " + nextFam[5] + "\n")
                 errOut = False
     return errOut
 
@@ -296,8 +330,44 @@ def marriageAfter14(fams, indis):
                 differenceinYears = difference.years
                 # print(differenceinYears)
                 if (differenceinYears < 14):
-                    errors.append("The individual" + indi[0] + "was married before 14\n")
+                    errors.append("The individual" +
+                                  indi[0] + "was married before 14\n")
                     errOut = False
+    return errOut
+
+
+def noIllegitimateDateFormats(indis, fams):
+    errOut = True
+    for indi in indis:
+        if (indi[3] != "N/A"):
+            try:
+                datetime.strptime(indi[3], '%d %b %Y')
+            except ValueError:
+                errors.append("Error: Individual " +
+                              indi[1] + " has an invalid birth date\n")
+                errOut = False
+        if (indi[4] != "N/A"):
+            try:
+                datetime.strptime(indi[4], '%d %b %Y')
+            except ValueError:
+                errors.append("Error: Individual " +
+                              indi[1] + " has an invalid death date\n")
+                errOut = False
+    for fam in fams:
+        if (fam[1] != "N/A"):
+            try:
+                datetime.strptime(fam[1], '%d %b %Y')
+            except ValueError:
+                errors.append("Error: Family " +
+                              fam[0] + " has an invalid marriage date\n")
+                errOut = False
+        if (fam[2] != "N/A"):
+            try:
+                datetime.strptime(fam[2], '%d %b %Y')
+            except ValueError:
+                errors.append("Error: Family " +
+                              fam[0] + " has an invalid divorce date\n")
+                errOut = False
     return errOut
 
 
@@ -316,6 +386,7 @@ def main():
     uniqueIDs = unique_ID(indis, fams)
     dbD = divorceBeforeDeath(fams, indis)
     bigamy = noBigamy(fams, indis)
+    parents_not_too_old = parentsNotTooOld(fams, indis)
     marrBefore14 = marriageAfter14(fams, indis)
     bBD = birthBeforeDeath(indis)
     birthBeforeParentsDeath = birthBeforeDeathofParents(fams, indis)
@@ -367,7 +438,7 @@ def main():
             f.write("No individuals were married before 14\n")
         if(bBD):
             f.write("All birth dates are before death dates\n")
-        if(len(errors)>0):
+        if(len(errors) > 0):
             f.writelines(errors)
 
 
