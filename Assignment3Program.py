@@ -348,7 +348,7 @@ def noIllegitimateDateFormats(indis, fams):
                 errOut = False
         if (indi[4] != "N/A"):
             try:
-                datetime.strptime(indi[4], '%d %b %Y')
+                datetime.strptime(indi[6], '%d %b %Y')
             except ValueError:
                 errors.append("Error: Individual " +
                               indi[1] + " has an invalid death date\n")
