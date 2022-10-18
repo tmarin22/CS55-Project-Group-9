@@ -1,10 +1,21 @@
+import time
 from gedcom.element.individual import IndividualElement
 from gedcom.parser import Parser
 from gedcom.element.element import Element
-from datetime import datetime
+from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
+def getDate(var):
+    return datetime.strptime(var, '%d %b %Y').date()
+
+
 errors = []
+
+def compareDates(laterDate, earlierDate, errorMsg):
+    if(laterDate < earlierDate):
+        errors.append(errorMsg)
+        return False
+    return True
 
 def getElems(elements):
     accepted_tags = ["INDI", "NAME", "SEX", "BIRT", "DEAT", "FAMC", "FAMS",
@@ -110,29 +121,21 @@ def getFams(elements, indis):
 def marriageBeforeDeath(fams, indis):
     errOut = True
     for fam in fams:
-        marriedDate = datetime.strptime(fam[1], '%d %b %Y').date()
+        marriedDate = getDate(fam[1])
         husbID = fam[3]
         wifeID = fam[5]
         for indi in indis:
             ID = indi[0]
             if (ID == husbID):
                 if (not indi[5]):
-                    deathdate = datetime.strptime(indi[6], '%d %b %Y').date()
-                    if (deathdate < marriedDate):
-                        errors.append('Error: Husband named ' +
-                              indi[1] + ' of family ' + fam[0] + ' has a death date before marriage || ')
-                        errors.append("Death Date: " +
-                              indi[6] + " | Marriage Date: " + fam[1] + "\n")
-                        errOut = False
+                    deathdate = getDate(indi[6])
+                    errorMsg = 'Error: Husband named ' + indi[1] + ' of family ' + fam[0] + ' has a death date before marriage || Death Date: ' + indi[6] + ' | Marriage Date: ' + fam[1] + '\n'
+                    errOut = compareDates(deathdate, marriedDate, errorMsg)
             if (ID == wifeID):
                 if (not indi[5]):
-                    deathdate = datetime.strptime(indi[6], '%d %b %Y').date()
-                    if (deathdate < marriedDate):
-                        errors.append("Error: Wife named " + indi[1] + " of family " +
-                              fam[0] + " has a death date before marriage || ")
-                        errors.append("Death Date: " +
-                              indi[6] + " | Marriage Date: " + fam[1] + "\n")
-                        errOut = False
+                    deathdate = getDate(indi[6])
+                    errorMsg = "Error: Wife named " + indi[1] + " of family " + fam[0] + " has a death date before marriage || Death Date: " + indi[6] + " | Marriage Date: " + fam[1] + "\n"
+                    errOut = compareDates(deathdate, marriedDate, errorMsg)
     return errOut
 
 
@@ -225,6 +228,54 @@ def birthBeforeDeath(indis):
                 errOut = False
     return errOut
 
+def datesBeforeCurrent(fams, indis):
+    currentDate = datetime.now().date()
+    for fam in fams:
+        marDate = datetime.strptime(fam[1], '%d %b %Y').date()
+        if(marDate > currentDate):
+            print("Family with ID " + fam[0] + " has a marriage date after current date")
+            return False
+        if(fam[2] != "N/A"):
+            divDate = datetime.strptime(fam[2], '%d %b %Y').date()
+            if(divDate > currentDate):
+                print("Family with ID " + fam[0] + " has a divorce date after current date")
+                return False
+    for indi in indis:
+        birthDate = datetime.strptime(indi[3], '%d %b %Y').date()
+        if(birthDate > currentDate):
+            print("Individual with ID " + indi[0] + " has a birth date after current date")
+            return False
+        if(indi[6]!= "N/A"):
+            deathDate = datetime.strptime(indi[6], '%d %b %Y').date()
+            if(deathDate > currentDate):
+                print("Individual with ID " + indi[0] + " has a death date after current date")
+                return False
+    print("All dates occur before current time")
+    return True
+
+def birthBeforeDeathofParents(fams, indis):
+    for fam in fams:
+        for child in fam[7]:
+            for indi in indis:
+                if(indi[0] == child):
+                    childBDate = datetime.strptime(indi[3], '%d %b %Y').date()
+                    for parents in indis:
+                        if(parents[0] == fam[3]):
+                            if(parents[6] != "N/A"):
+                                fatherDDate = datetime.strptime(parents[6], '%d %b %Y').date()
+                                adjustedDate = fatherDDate + relativedelta(months = 9)
+                                if(adjustedDate < childBDate):
+                                    print("Father died more than 9 months before child was born")
+                                    return False
+                        if(parents[0] == fam[5]):
+                            if(parents[6] != "N/A"):
+                                motherDDate = datetime.strptime(parents[6], '%d %b %Y').date()
+                                if(motherDDate < childBDate):
+                                    print("Mother died beofre child was born")
+                                    return False            
+    print("All parents death make sense in respect to childs birth")
+    return True
+
 # US10	Marriage after 14
 
 
@@ -267,6 +318,8 @@ def main():
     bigamy = noBigamy(fams, indis)
     marrBefore14 = marriageAfter14(fams, indis)
     bBD = birthBeforeDeath(indis)
+    birthBeforeParentsDeath = birthBeforeDeathofParents(fams, indis)
+    beforeCurrent = datesBeforeCurrent(fams, indis)
 
     indiStrings = []
 
