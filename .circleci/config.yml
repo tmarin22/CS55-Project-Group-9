@@ -11,6 +11,7 @@ jobs:
       - checkout
       - run: 
           command: |
+            pip install python-gedcom
             pip install pytest
             pytest --junitxml=test-results/junit.xml testFile.py
       - store_test_results:
