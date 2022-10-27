@@ -29,7 +29,7 @@ class TestGedcom(unittest.TestCase):
         self.assertTrue(marriageAfter14(fams, indis))
 
     def testParentsNotTooOld(self):
-        self.assertTrue(parentsNotTooOld(fams, indis))
+        self.assertTrue(parents_not_too_old(fams, indis))
 
     def testBirthBeforeDeathOfParents(self):
         self.assertTrue(birthBeforeDeathofParents(fams, indis))
@@ -39,10 +39,10 @@ class TestGedcom(unittest.TestCase):
 
     def testHasFatherLastname(self):
         self.assertTrue(hasFatherLastname(fams, indis))
-    
+
     def testCheckSiblingNumber(self):
         self.assertTrue(checkSiblingNumber(fams))
-    
+
     def testNoIllegitimateDateFormats(self):
         self.assertTrue(noIllegitimateDateFormats(indis, fams))
 
