@@ -345,7 +345,7 @@ def birthBeforeMarriage(fams, indis):
     return True
 
 
-def lessThan150YearsOld(fams, indis):
+def lessThan150YearsOld(indis):
     for indi in indis:
         if(indi[3] != "N/A"):
             birthDate = datetime.strptime(indi[3], '%d %b %Y').date()
@@ -578,6 +578,10 @@ def main():
     dates = noIllegitimateDateFormats(indis, fams)
     deathList = listDeads(indis)
     sibligsSortedByAge = sortSibligs(fams, indis)
+    singles = livingSingle(indis, fams)
+    largeAgeDiff = largeAgeDifference(fams, indis)
+    bornWhenMarried = birthBeforeMarriage(fams, indis)
+    ages = lessThan150YearsOld(indis)
 
     indiStrings = []
 
@@ -647,6 +651,18 @@ def main():
             f.write("All dates occur before today's date\n")
         if(dates):
             f.write("All dates are of the correct format\n")
+        if(ages):
+            f.write("All individuals lived less than 150 years\n")
+        if(bornWhenMarried):
+            f.write("All married couples were born before marriage\n")
+        if(len(singles) < 1):
+            f.write("No individuals over the age of 30 have never been married\n")
+        else:
+            f.writelines(singles)
+        if(len(largeAgeDiff)< 1):
+            f.write("No married couples had large age differnces when Married\n")
+        else:
+            f.writelines(largeAgeDiff)
         if(len(errors) > 0):
             f.writelines(errors)
 

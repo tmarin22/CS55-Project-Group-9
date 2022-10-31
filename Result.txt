@@ -21,10 +21,10 @@ ID: @F6000000178673736881@ | Married: 18 APR 1968 | Divorced: 19 JUN 1975 | Husb
 
 Siblings sorted by age: 
 Family ID: @F6000000178673736881@ | Father Name: Carlos Miyares | Sibling Name: Mia Miyares | Age: 50
+Family ID: @F6000000178674234904@ | Father Name: Nelson Marin | Sibling Name: Richard Marin | Age: 50
 Family ID: @F6000000178674344900@ | Father Name: Richard Marin | Sibling Name: Aisha Marin | Age: 32
 Family ID: @F6000000178674344900@ | Father Name: Richard Marin | Sibling Name: Richie Marin | Age: 30
 Family ID: @F6000000178674323848@ | Father Name: Richard Marin | Sibling Name: Tayler Marin | Age: 22
-Family ID: @F6000000178674234904@ | Father Name: Nelson Marin | Sibling Name: Richard Marin | Age: 50
 
 Dead People List: 
 ID: @I6000000178674344894@ | Name: Diana Diaz | Dead Date: 10 DEC 1993 | Age: 50
@@ -44,3 +44,8 @@ Fathers are less than 80 years and mothers are less than 60 years old for birth 
 All children born before death of mothers and no more than 9 months after fathers death
 All dates occur before today's date
 All dates are of the correct format
+All individuals lived less than 150 years
+All married couples were born before marriage
+Aisha Marin is over 30 years old and has never been married
+Richie Marin is over 30 years old and has never been married
+No married couples had large age differnces when Married
