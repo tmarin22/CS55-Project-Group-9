@@ -374,14 +374,9 @@ def marriageAfter14(fams, indis):
         for fam in fams:
             if (indi[0] == fam[3] or indi[0] == fam[5]):
                 married = datetime.strptime(fam[1], '%d %b %Y')
-                # print(married)
                 bornDate = datetime.strptime(indi[3], '%d %b %Y')
-                # print(bornDate)
-                #print("individual " + indi[1] + " was married on " + fam[1])
-                #difference = (married - bornDate).days
                 difference = relativedelta(married, bornDate)
                 differenceinYears = difference.years
-                # print(differenceinYears)
                 if (differenceinYears < 14):
                     errors.append("The individual" +
                                   indi[0] + "was married before 14\n")
@@ -473,6 +468,58 @@ def checkSiblingNumber(fams):
     #print("No more than 15 siblings")
     return errOut
 
+#SPRINT 3 
+
+#US28	Order siblings by age
+
+def sortSibligs(fams, indis, isReverse = True):
+    errOut = True
+    siblingsAges = []
+    siblingSortByAgeStrings = []
+    parentsNames = []
+    for fam in fams:
+        children = fam[7]
+        for child in children:
+            for indi in indis:
+                if (indi[0] != child):
+                    continue
+                else:
+                    familyId = fam[0]
+                    parentName = fam[4]
+                    childName = indi[1]
+                    childAge = indi[4]
+                    siblingsAges.append([familyId,parentName,childName, childAge])
+                    parentsNames.append(parentName)
+    # Sort all individuals by age
+    sortedbyAge = sorted(siblingsAges, key=lambda x: x[3], reverse= isReverse)
+
+    ## group by parent name
+    for father in set(parentsNames):
+        for indi in sortedbyAge:
+            if indi[1] == father:
+                string = "Family ID: " + indi[0] + " | Father Name: " + indi[1] + " | Sibling Name: " + indi[2] + " | Age: " + indi[3].__str__() + "\n"
+                siblingSortByAgeStrings.append(string)
+                errOut=False
+            else:
+                continue
+    return(siblingSortByAgeStrings)
+
+
+def listDeads(indis):
+    errOut = True
+    indiesFilterByNa1 = filter(lambda x: x[6] != 'N/A', indis)
+    listRecentDeads1 = list(indiesFilterByNa1)
+    recentDeads1= []
+    if (len(listRecentDeads1) < 1):
+        recentDeads1.append("No recent deads")
+    else:
+        for indi in listRecentDeads1:
+            string1 = "ID: " + indi[0] + " | Name: " + indi[1] + " | Dead Date: " + indi[6] + " | Age: " + indi[4].__str__() + "\n"
+            recentDeads1.append(string1)
+            errOut=False
+    
+    return(recentDeads1)
+
 
 def main():
     file_path = 'ProjectSampleGedcom.ged'
@@ -497,6 +544,8 @@ def main():
     hFL = hasFatherLastname(fams, indis)
     cSN = checkSiblingNumber(fams)
     dates = noIllegitimateDateFormats(indis, fams)
+    sibligsSortedByAge = sortSibligs(fams, indis)
+    deathList = listDeads(indis)
 
     indiStrings = []
 
@@ -529,7 +578,15 @@ def main():
         f.write("Families: \n")
         f.write("\n")
         f.writelines(famStrings)
-
+        f.write("\n")
+        #siblings
+        f.write("\n")
+        f.write("Siblings sorted by age: \n")
+        f.writelines(sibligsSortedByAge)
+        #listofDeath
+        f.write("\n")
+        f.write("Dead People List: \n")
+        f.writelines(deathList)
         f.write("\n")
 
         if(mbD):
@@ -558,6 +615,10 @@ def main():
             f.write("All dates occur before today's date\n")
         if(dates):
             f.write("All dates are of the correct format\n")
+        if(sibligsSortedByAge):
+            f.write("sorted siblings are printed above\n")
+        if(deathList):
+            f.write("sorted dead people are listed above\n") 
         if(len(errors) > 0):
             f.writelines(errors)
 
