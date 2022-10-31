@@ -345,6 +345,26 @@ def birthBeforeMarriage(fams, indis):
     return True
 
 
+def lessThan150YearsOld(fams, indis):
+    for indi in indis:
+        if(indi[3] != "N/A"):
+            birthDate = datetime.strptime(indi[3], '%d %b %Y').date()
+            if(indi[6] != "N/A"):
+                deathDate = datetime.strptime(indi[6], '%d %b %Y').date()
+                if((deathDate - birthDate).days > 54750):
+                    print("Individual with ID " + indi[0] +
+                          " lived more than 150 years")
+                    return False
+            else:
+                currentDate = datetime.now().date()
+                if((currentDate - birthDate).days > 54750):
+                    print("Individual with ID " + indi[0] +
+                          " lived more than 150 years")
+                    return False
+    print("All individuals lived less than 150 years")
+    return True
+
+
 # US10	Marriage after 14
 def marriageAfter14(fams, indis):
     errOut = True
