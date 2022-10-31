@@ -51,6 +51,12 @@ class TestGedcom(unittest.TestCase):
 
     def testLessThan150YearsOld(self):
         self.assertTrue(lessThan150YearsOld(fams, indis))
+        
+    def testsortSibligs(self):
+        self.assertTrue(sortSibligs(fams, indis))
+
+    def testlistDeads(self):
+        self.assertTrue(listDeads(indis))
 
 
 if __name__ == '__main__':
