@@ -50,13 +50,19 @@ class TestGedcom(unittest.TestCase):
         self.assertTrue(birthBeforeMarriage(fams, indis))
 
     def testLessThan150YearsOld(self):
-        self.assertTrue(lessThan150YearsOld(fams, indis))
+        self.assertTrue(lessThan150YearsOld(indis))
         
     def testsortSibligs(self):
         self.assertTrue(sortSibligs(fams, indis))
 
     def testlistDeads(self):
         self.assertTrue(listDeads(indis))
+
+    def testLivingSingle(self):
+        self.assertTrue(len(livingSingle(indis, fams))>0)
+    
+    def testLargeAgeDifference(self):
+        self.assertTrue(len(largeAgeDifference(fams, indis))>0)
 
 
 if __name__ == '__main__':
