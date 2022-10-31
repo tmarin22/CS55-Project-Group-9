@@ -473,6 +473,38 @@ def checkSiblingNumber(fams):
     #print("No more than 15 siblings")
     return errOut
 
+def largeAgeDifference(fams, indis):
+    result_arr = []
+    for fam in fams:
+        husbID = fam[3]
+        wifeID = fam[5]
+        married = datetime.strptime(fam[1], '%d %b %Y').date()
+        husbAge = -1
+        wifeAge = -1
+
+        for indi in indis:
+            if(indi[0] == husbID):
+                husbBirth = datetime.strptime(indi[3], '%d %b %Y').date()
+                husbAge = relativedelta(married, husbBirth).years
+            if(indi[0] == wifeID):
+                wifeBirth = datetime.strptime(indi[3], '%d %b %Y').date()
+                wifeAge = relativedelta(married, wifeBirth).years
+        
+        if(husbAge >= (2*wifeAge) or wifeAge >= (2*husbAge)):
+            resultStr = fam[4] + " and " + fam[6] + " had an age difference of more than double the age of one of the spouses\n"
+            result_arr.append(resultStr)
+    return result_arr
+
+def livingSingle(indis, fams):
+    singles = []
+    for indi in indis:
+        if(indi[4] >= 30):
+            alwaysSingle = True
+            for fam in fams:
+                if(indi[0] == fam[3] or indi[0] == fam[5]):
+                    alwaysSingle = False
+            if(alwaysSingle): singles.append(indi[1] + " is over 30 years old and has never been married\n")
+    return singles 
 
 def main():
     file_path = 'ProjectSampleGedcom.ged'
@@ -497,6 +529,10 @@ def main():
     hFL = hasFatherLastname(fams, indis)
     cSN = checkSiblingNumber(fams)
     dates = noIllegitimateDateFormats(indis, fams)
+    ageDiff = largeAgeDifference(fams, indis)
+    singles = livingSingle(indis, fams)
+    birthMarriage = birthBeforeMarriage(fams, indis)
+    maxAge = lessThan150YearsOld(fams, indis)
 
     indiStrings = []
 
@@ -558,6 +594,18 @@ def main():
             f.write("All dates occur before today's date\n")
         if(dates):
             f.write("All dates are of the correct format\n")
+        if(len(ageDiff) < 1):
+            f.write("No marriages with large age differences\n")
+        else:
+            f.writelines(ageDiff)
+        if(len(singles)< 1):
+            f.write("No individuals over the age of 30 have never been married\n")
+        else:
+            f.writelines(singles)
+        if(birthMarriage):
+            f.write("All married couples were born before marriage\n")
+        if(maxAge):
+            f.write("All individuals lived less than 150 years\n")
         if(len(errors) > 0):
             f.writelines(errors)
 

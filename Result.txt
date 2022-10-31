@@ -30,3 +30,8 @@ Fathers are less than 80 years and mothers are less than 60 years old for birth 
 All children born before death of mothers and no more than 9 months after fathers death
 All dates occur before today's date
 All dates are of the correct format
+No marriages with large age differences
+Aisha Marin is over 30 years old and has never been married
+Richie Marin is over 30 years old and has never been married
+All married couples were born before marriage
+All individuals lived less than 150 years
