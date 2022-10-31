@@ -18,6 +18,20 @@ ID: @F6000000178674344900@ | Married: 15 AUG 1989 | Divorced: N/A | Husband ID: 
 ID: @F6000000178674234904@ | Married: 25 DEC 2004 | Divorced: N/A | Husband ID: @I6000000178674234898@ | Husband Name: Nelson Marin | Wife ID: @I6000000178675557823@ | Wife Name: Irma Martell | Children: [ @I6000000178674323843@ ]
 ID: @F6000000178673736881@ | Married: 18 APR 1968 | Divorced: 19 JUN 1975 | Husband ID: @I6000000178673736875@ | Husband Name: Carlos Miyares | Wife ID: @I6000000178675392822@ | Wife Name: Karen Miyares | Children: [ @I6000000178674423835@ ]
 
+
+Siblings sorted by age: 
+Family ID: @F6000000178673736881@ | Father Name: Carlos Miyares | Sibling Name: Mia Miyares | Age: 50
+Family ID: @F6000000178674344900@ | Father Name: Richard Marin | Sibling Name: Aisha Marin | Age: 32
+Family ID: @F6000000178674344900@ | Father Name: Richard Marin | Sibling Name: Richie Marin | Age: 30
+Family ID: @F6000000178674323848@ | Father Name: Richard Marin | Sibling Name: Tayler Marin | Age: 22
+Family ID: @F6000000178674234904@ | Father Name: Nelson Marin | Sibling Name: Richard Marin | Age: 50
+
+Dead People List: 
+ID: @I6000000178674344894@ | Name: Diana Diaz | Dead Date: 10 DEC 1993 | Age: 50
+ID: @I6000000178674234898@ | Name: Nelson Marin | Dead Date: 2 FEB 2005 | Age: 67
+ID: @I6000000178675557823@ | Name: Irma Martell | Dead Date: 7 SEP 2014 | Age: 68
+ID: @I6000000178673736875@ | Name: Carlos Miyares | Dead Date: 23 JUL 1996 | Age: 91
+
 All Marriage dates are before Death dates of spouses
 All IDs are unique
 All Divorce dates are before Death dates of spouses
@@ -30,8 +44,3 @@ Fathers are less than 80 years and mothers are less than 60 years old for birth 
 All children born before death of mothers and no more than 9 months after fathers death
 All dates occur before today's date
 All dates are of the correct format
-No marriages with large age differences
-Aisha Marin is over 30 years old and has never been married
-Richie Marin is over 30 years old and has never been married
-All married couples were born before marriage
-All individuals lived less than 150 years

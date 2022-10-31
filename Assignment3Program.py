@@ -576,7 +576,8 @@ def main():
     hFL = hasFatherLastname(fams, indis)
     cSN = checkSiblingNumber(fams)
     dates = noIllegitimateDateFormats(indis, fams)
-    deathList = listde
+    deathList = listDeads(indis)
+    sibligsSortedByAge = sortSibligs(fams, indis)
 
     indiStrings = []
 
