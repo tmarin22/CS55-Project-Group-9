@@ -39,12 +39,18 @@ class TestGedcom(unittest.TestCase):
 
     def testHasFatherLastname(self):
         self.assertTrue(hasFatherLastname(fams, indis))
-    
+
     def testCheckSiblingNumber(self):
         self.assertTrue(checkSiblingNumber(fams))
-    
+
     def testNoIllegitimateDateFormats(self):
         self.assertTrue(noIllegitimateDateFormats(indis, fams))
+
+    def testBirthBeforeMarriage(self):
+        self.assertTrue(birthBeforeMarriage(fams, indis))
+
+    def testLessThan150YearsOld(self):
+        self.assertTrue(lessThan150YearsOld(fams, indis))
 
 
 if __name__ == '__main__':
