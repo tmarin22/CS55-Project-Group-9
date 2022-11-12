@@ -552,10 +552,49 @@ def livingSingle(indis, fams):
                     alwaysSingle = False
             if(alwaysSingle): singles.append(indi[1] + " is over 30 years old and has never been married\n")
     return singles 
+#SPRINT 4
+
+#US35	List recent births
+
+def listRecentBirths(indis, year= 2000, month = 1, day = 1 ):
+    errOut = True
+    indisFilterByNa = filter(lambda x: x[3] != 'N/A', indis)
+    indisFilterByDate = filter(lambda x: datetime.strptime(x[3], '%d %b %Y') > datetime(year, month, day), indisFilterByNa)
+
+    listRecentBirths = list(indisFilterByDate)
+
+    recentBirths= []
+    if (len(listRecentBirths) < 1):
+        recentBirths.append("No recent births")
+    else:
+        for indi in listRecentBirths:
+            string = "ID: " + indi[0] + " | Name: " + indi[1] + " | Birth Date: " + indi[3] + " | Age: " + indi[4].__str__() + "\n"
+            recentBirths.append(string)
+            errOut=False
+    return(recentBirths)
+
+#US36	List recent deaths
+
+def listRecentDeads(indis, year= 2000, month = 1, day = 1):
+    errOut = True
+    indiesFilterByNa = filter(lambda x: x[6] != 'N/A', indis)
+    indisFilterByDate = filter(lambda x: datetime.strptime(x[6], '%d %b %Y') > datetime(year, month, day), indiesFilterByNa)
+
+    listRecentDeads = list(indisFilterByDate)
+
+    recentDeads= []
+    if (len(listRecentDeads) < 1):
+        recentDeads.append("No recent deads")
+    else:
+        for indi in listRecentDeads:
+            string = "ID: " + indi[0] + " | Name: " + indi[1] + " | Dead Date: " + indi[6] + " | Age: " + indi[4].__str__() + "\n"
+            recentDeads.append(string)
+            errOut=False
+    return(recentDeads)
 
 def main():
-    file_path = 'ProjectSampleGedcom.ged'
-    # file_path = 'C:\ProjectSampleGedcom.ged' # for PDS to run in her PC
+    #file_path = 'ProjectSampleGedcom.ged'
+    file_path = 'C:\ProjectSampleGedcom.ged' # for PDS to run in her PC
 
     lines = []
 
@@ -582,6 +621,8 @@ def main():
     largeAgeDiff = largeAgeDifference(fams, indis)
     bornWhenMarried = birthBeforeMarriage(fams, indis)
     ages = lessThan150YearsOld(indis)
+    recentBirths = listRecentBirths(indis, year= 2000, month = 1, day = 1 )
+    recentDeads = listRecentDeads(indis, year= 2000, month = 1, day = 1)
 
     indiStrings = []
 
@@ -617,13 +658,21 @@ def main():
         f.write("\n")
         #siblings
         f.write("\n")
-        f.write("Siblings sorted by age: \n")
+        f.write("Siblings sorted by ages: \n")
         f.writelines(sibligsSortedByAge)
         #listofDeath
         f.write("\n")
         f.write("Dead People List: \n")
         f.writelines(deathList)
         f.write("\n")
+        # Recent Births
+        f.write("\n")
+        f.write("Recent Births: \n")
+        f.writelines(recentBirths)
+        # Recent Deads
+        f.write("\n")
+        f.write("Recent Deads: \n")
+        f.writelines(recentDeads)
 
         if(mbD):
             f.write("All Marriage dates are before Death dates of spouses\n")
@@ -663,6 +712,14 @@ def main():
             f.write("No married couples had large age differnces when Married\n")
         else:
             f.writelines(largeAgeDiff)
+        if(len(recentBirths) < 1):
+            f.write("No individuals have been born after 2000\n")
+        else:
+            f.writelines(recentBirths)
+        if(len(recentDeads) < 1):
+            f.write("No individuals have died after 2000\n")
+        else:
+            f.writelines(recentDeads)
         if(len(errors) > 0):
             f.writelines(errors)
 

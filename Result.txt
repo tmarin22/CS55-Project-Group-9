@@ -20,11 +20,11 @@ ID: @F6000000178673736881@ | Married: 18 APR 1968 | Divorced: 19 JUN 1975 | Husb
 
 
 Siblings sorted by age: 
-Family ID: @F6000000178673736881@ | Father Name: Carlos Miyares | Sibling Name: Mia Miyares | Age: 50
-Family ID: @F6000000178674234904@ | Father Name: Nelson Marin | Sibling Name: Richard Marin | Age: 50
 Family ID: @F6000000178674344900@ | Father Name: Richard Marin | Sibling Name: Aisha Marin | Age: 32
 Family ID: @F6000000178674344900@ | Father Name: Richard Marin | Sibling Name: Richie Marin | Age: 30
 Family ID: @F6000000178674323848@ | Father Name: Richard Marin | Sibling Name: Tayler Marin | Age: 22
+Family ID: @F6000000178673736881@ | Father Name: Carlos Miyares | Sibling Name: Mia Miyares | Age: 50
+Family ID: @F6000000178674234904@ | Father Name: Nelson Marin | Sibling Name: Richard Marin | Age: 50
 
 Dead People List: 
 ID: @I6000000178674344894@ | Name: Diana Diaz | Dead Date: 10 DEC 1993 | Age: 50
@@ -32,6 +32,13 @@ ID: @I6000000178674234898@ | Name: Nelson Marin | Dead Date: 2 FEB 2005 | Age: 6
 ID: @I6000000178675557823@ | Name: Irma Martell | Dead Date: 7 SEP 2014 | Age: 68
 ID: @I6000000178673736875@ | Name: Carlos Miyares | Dead Date: 23 JUL 1996 | Age: 91
 
+
+Recent Births: 
+ID: @I6000000178674878823@ | Name: Tayler Marin | Birth Date: 6 JAN 2000 | Age: 22
+
+Recent Deads: 
+ID: @I6000000178674234898@ | Name: Nelson Marin | Dead Date: 2 FEB 2005 | Age: 67
+ID: @I6000000178675557823@ | Name: Irma Martell | Dead Date: 7 SEP 2014 | Age: 68
 All Marriage dates are before Death dates of spouses
 All IDs are unique
 All Divorce dates are before Death dates of spouses

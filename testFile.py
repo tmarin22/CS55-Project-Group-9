@@ -1,7 +1,8 @@
 import unittest
 from Assignment3Program import *
 
-file_path = "./ProjectSampleGedcom.ged"
+#file_path = "./ProjectSampleGedcom.ged"
+file_path = 'C:\ProjectSampleGedcom.ged' # for PDS to run in her PC
 gedcom_parser = Parser()
 gedcom_parser.parse_file(file_path)
 elements = gedcom_parser.get_element_list()
@@ -63,6 +64,12 @@ class TestGedcom(unittest.TestCase):
     
     def testLargeAgeDifference(self):
         self.assertTrue(len(largeAgeDifference(fams, indis)) >= 0)
+
+    def testlistRecentBirths(self):
+        self.assertTrue(len(listRecentBirths(indis, year= 2000, month = 1, day = 1 )) >= 0)
+    
+    def testlistRecentDeads(self):
+        self.assertTrue(len(listRecentBirths(indis, year= 2000, month = 1, day = 1 )) >= 0)
 
 
 if __name__ == '__main__':
