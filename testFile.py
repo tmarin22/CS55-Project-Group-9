@@ -71,6 +71,11 @@ class TestGedcom(unittest.TestCase):
     def testlistRecentDeads(self):
         self.assertTrue(len(listRecentBirths(indis, year= 2000, month = 1, day = 1 )) >= 0)
 
+    def testListOrphans(self):
+        self.assertTrue(len(listOrphans(indis, fams)) >= 0)
+
+    def testSiblingsNotMarried(self):
+        self.assertTrue(siblingsNotMarried(fams))
 
 if __name__ == '__main__':
     unittest.main()

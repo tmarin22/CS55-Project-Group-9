@@ -1,3 +1,4 @@
+from asyncio import format_helpers
 import time
 from gedcom.element.individual import IndividualElement
 from gedcom.parser import Parser
@@ -592,9 +593,48 @@ def listRecentDeads(indis, year= 2000, month = 1, day = 1):
             errOut=False
     return(recentDeads)
 
+def listOrphans(indis, fams):
+    orphansList = []
+    for fam in fams:
+        fatherID = fam[3]
+        motherID = fam[5]
+        fatherDead = False
+        motherDead = False
+        fatherDeathDate = ""
+        motherDeathDate = ""
+        for indi in indis:
+            if (indi[0] == fatherID and indi[5] == False):
+                fatherDead = True
+                fatherDeathDate = datetime.strptime(indi[6], '%d %b %Y').date()
+            if (indi[0] == motherID and indi[5] == False):
+                motherDead = True
+                motherDeathDate = datetime.strptime(indi[6], '%d %b %Y').date()
+        if (motherDead and fatherDead):
+            for child in fam[7]:
+                for indi in indis:
+                    if (indi[0] == child):
+                        childBirthDate = datetime.strptime(indi[3], '%d %b %Y').date()
+                        childMinusMomDeath = relativedelta(motherDeathDate, childBirthDate).years
+                        childMinusDadDeath = relativedelta(fatherDeathDate, childBirthDate).years
+                        if(childMinusDadDeath < 18 and childMinusMomDeath < 18):
+                            orphansList.append(indi[1])
+    return(orphansList)
+
+def siblingsNotMarried(fams):
+    errOut = True
+    for fam in fams:
+        husbID = fam[3]
+        wifeID = fam[5]
+        for fami in fams:
+            if husbID in fami[7]:
+                if wifeID in fami[7]:
+                    errOut = False
+                    errors.append("Husband " + fam[4] + " and wife " + fam[6] + " are siblings") #error
+    return(errOut)
+
 def main():
-    #file_path = 'ProjectSampleGedcom.ged'
-    file_path = 'C:\ProjectSampleGedcom.ged' # for PDS to run in her PC
+    file_path = 'ProjectSampleGedcom.ged'
+    #file_path = 'C:\ProjectSampleGedcom.ged' # for PDS to run in her PC
 
     lines = []
 
@@ -623,6 +663,8 @@ def main():
     ages = lessThan150YearsOld(indis)
     recentBirths = listRecentBirths(indis, year= 2000, month = 1, day = 1 )
     recentDeads = listRecentDeads(indis, year= 2000, month = 1, day = 1)
+    orphans = listOrphans(indis, fams)
+    marriedSiblings = siblingsNotMarried(fams)
 
     indiStrings = []
 
@@ -720,8 +762,16 @@ def main():
             f.write("No individuals have died after 2000\n")
         else:
             f.writelines(recentDeads)
+        if(len(orphans)< 1):
+            f.write("No orphans\n")
+        else:
+            f.write("Orphans List: \n")
+            f.writelines(orphans)
+        if(marriedSiblings):
+            f.write("No siblings are married to each other")
         if(len(errors) > 0):
             f.writelines(errors)
+        
 
 
 if __name__ == "__main__":
