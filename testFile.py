@@ -1,8 +1,8 @@
 import unittest
 from Assignment3Program import *
 
-#file_path = "./ProjectSampleGedcom.ged"
-file_path = 'C:\ProjectSampleGedcom.ged' # for PDS to run in her PC
+file_path = "./ProjectSampleGedcom.ged"
+#file_path = 'C:\ProjectSampleGedcom.ged' # for PDS to run in her PC
 gedcom_parser = Parser()
 gedcom_parser.parse_file(file_path)
 elements = gedcom_parser.get_element_list()
