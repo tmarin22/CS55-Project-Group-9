@@ -2,7 +2,7 @@ import unittest
 from Assignment3Program import *
 
 file_path = "./ProjectSampleGedcom.ged"
-#file_path = 'C:\ProjectSampleGedcom.ged' # for PDS to run in her PC
+# file_path = 'C:\ProjectSampleGedcom.ged' # for PDS to run in her PC
 gedcom_parser = Parser()
 gedcom_parser.parse_file(file_path)
 elements = gedcom_parser.get_element_list()
@@ -52,7 +52,7 @@ class TestGedcom(unittest.TestCase):
 
     def testLessThan150YearsOld(self):
         self.assertTrue(lessThan150YearsOld(indis))
-        
+
     def testsortSibligs(self):
         self.assertTrue(sortSibligs(fams, indis))
 
@@ -61,21 +61,30 @@ class TestGedcom(unittest.TestCase):
 
     def testLivingSingle(self):
         self.assertTrue(len(livingSingle(indis, fams)) >= 0)
-    
+
     def testLargeAgeDifference(self):
         self.assertTrue(len(largeAgeDifference(fams, indis)) >= 0)
 
     def testlistRecentBirths(self):
-        self.assertTrue(len(listRecentBirths(indis, year= 2000, month = 1, day = 1 )) >= 0)
-    
+        self.assertTrue(len(listRecentBirths(
+            indis, year=2000, month=1, day=1)) >= 0)
+
     def testlistRecentDeads(self):
-        self.assertTrue(len(listRecentBirths(indis, year= 2000, month = 1, day = 1 )) >= 0)
+        self.assertTrue(len(listRecentBirths(
+            indis, year=2000, month=1, day=1)) >= 0)
 
     def testListOrphans(self):
         self.assertTrue(len(listOrphans(indis, fams)) >= 0)
 
     def testSiblingsNotMarried(self):
         self.assertTrue(siblingsNotMarried(fams))
+
+    def testSiblingsSpacing(self):
+        self.assertTrue(siblingsSpacing(fams, indis))
+
+    def testMarriageBeforeDivorce(self):
+        self.assertTrue(marriageBeforeDivorce(fams))
+
 
 if __name__ == '__main__':
     unittest.main()

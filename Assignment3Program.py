@@ -139,6 +139,31 @@ def marriageBeforeDeath(fams, indis):
     return errOut
 
 
+def siblingsSpacing(fams, indis):
+    """US 15: Siblings must be born at least 8 months apart, unless they are twins, denoted by a difference of two days at maximum"""
+    errOut = True
+    for fam in fams:
+        children = fam[7]
+        for child in children:
+            for indi in indis:
+                if child == indi[0]:
+                    childBday = datetime.strptime(indi[3], '%d %b %Y').date()
+                    for otherChild in children:
+                        if (otherChild != child):
+                            for otherIndi in indis:
+                                if otherChild == otherIndi[0]:
+                                    otherBday = datetime.strptime(
+                                        otherIndi[3], '%d %b %Y').date()
+                                    diff = abs(childBday - otherBday)
+                                    if diff.days < 240 and diff.days > 2:
+                                        errors.append("Error: Siblings " + indi[1] + " and " + otherIndi[1] + " of family " +
+                                                      fam[0] + " are not at least 8 months apart || ")
+                                        errors.append("Birth Date: " +
+                                                      indi[3] + " | Other Birth Date: " + otherIndi[3] + "\n")
+                                        errOut = False
+    return errOut
+
+
 def parentsNotTooOld(fams, indis):
     """Mother should be less than 60 years older than her children and father should be less than 80 years older than his children"""
     for fam in fams:
@@ -385,6 +410,19 @@ def marriageAfter14(fams, indis):
     return errOut
 
 
+def marriageBeforeDivorce(fams):
+    errOut = True
+    for fam in fams:
+        if (fam[2] != "N/A" and fam[1] != "N/A"):
+            married = datetime.strptime(fam[1], '%d %b %Y')
+            divorced = datetime.strptime(fam[2], '%d %b %Y')
+            if (married > divorced):
+                errors.append("The family" + fam[0] +
+                              "was married after divorce\n")
+                errOut = False
+    return errOut
+
+
 def noIllegitimateDateFormats(indis, fams):
     errOut = True
     for indi in indis:
@@ -469,11 +507,12 @@ def checkSiblingNumber(fams):
     #print("No more than 15 siblings")
     return errOut
 
-#SPRINT 3 
+# SPRINT 3
 
-#US28	Order siblings by age
+# US28	Order siblings by age
 
-def sortSibligs(fams, indis, isReverse = True):
+
+def sortSibligs(fams, indis, isReverse=True):
     errOut = True
     siblingsAges = []
     siblingSortByAgeStrings = []
@@ -489,18 +528,21 @@ def sortSibligs(fams, indis, isReverse = True):
                     parentName = fam[4]
                     childName = indi[1]
                     childAge = indi[4]
-                    siblingsAges.append([familyId,parentName,childName, childAge])
+                    siblingsAges.append(
+                        [familyId, parentName, childName, childAge])
                     parentsNames.append(parentName)
     # Sort all individuals by age
-    sortedbyAge = sorted(siblingsAges, key=lambda x: x[3], reverse= isReverse)
+    sortedbyAge = sorted(siblingsAges, key=lambda x: x[3], reverse=isReverse)
 
-    ## group by parent name
+    # group by parent name
     for father in set(parentsNames):
         for indi in sortedbyAge:
             if indi[1] == father:
-                string = "Family ID: " + indi[0] + " | Father Name: " + indi[1] + " | Sibling Name: " + indi[2] + " | Age: " + indi[3].__str__() + "\n"
+                string = "Family ID: " + indi[0] + " | Father Name: " + indi[1] + \
+                    " | Sibling Name: " + \
+                    indi[2] + " | Age: " + indi[3].__str__() + "\n"
                 siblingSortByAgeStrings.append(string)
-                errOut=False
+                errOut = False
             else:
                 continue
     return(siblingSortByAgeStrings)
@@ -510,16 +552,19 @@ def listDeads(indis):
     errOut = True
     indiesFilterByNa1 = filter(lambda x: x[6] != 'N/A', indis)
     listRecentDeads1 = list(indiesFilterByNa1)
-    recentDeads1= []
+    recentDeads1 = []
     if (len(listRecentDeads1) < 1):
         recentDeads1.append("No recent deads")
     else:
         for indi in listRecentDeads1:
-            string1 = "ID: " + indi[0] + " | Name: " + indi[1] + " | Dead Date: " + indi[6] + " | Age: " + indi[4].__str__() + "\n"
+            string1 = "ID: " + indi[0] + " | Name: " + indi[1] + \
+                " | Dead Date: " + indi[6] + \
+                " | Age: " + indi[4].__str__() + "\n"
             recentDeads1.append(string1)
-            errOut=False
-    
+            errOut = False
+
     return(recentDeads1)
+
 
 def largeAgeDifference(fams, indis):
     result_arr = []
@@ -537,11 +582,13 @@ def largeAgeDifference(fams, indis):
             if(indi[0] == wifeID):
                 wifeBirth = datetime.strptime(indi[3], '%d %b %Y').date()
                 wifeAge = relativedelta(married, wifeBirth).years
-        
+
         if(husbAge >= (2*wifeAge) or wifeAge >= (2*husbAge)):
-            resultStr = fam[4] + " and " + fam[6] + " had an age difference of more than double the age of one of the spouses\n"
+            resultStr = fam[4] + " and " + fam[6] + \
+                " had an age difference of more than double the age of one of the spouses\n"
             result_arr.append(resultStr)
     return result_arr
+
 
 def livingSingle(indis, fams):
     singles = []
@@ -551,47 +598,58 @@ def livingSingle(indis, fams):
             for fam in fams:
                 if(indi[0] == fam[3] or indi[0] == fam[5]):
                     alwaysSingle = False
-            if(alwaysSingle): singles.append(indi[1] + " is over 30 years old and has never been married\n")
-    return singles 
-#SPRINT 4
+            if(alwaysSingle):
+                singles.append(
+                    indi[1] + " is over 30 years old and has never been married\n")
+    return singles
+# SPRINT 4
 
-#US35	List recent births
+# US35	List recent births
 
-def listRecentBirths(indis, year= 2000, month = 1, day = 1 ):
+
+def listRecentBirths(indis, year=2000, month=1, day=1):
     errOut = True
     indisFilterByNa = filter(lambda x: x[3] != 'N/A', indis)
-    indisFilterByDate = filter(lambda x: datetime.strptime(x[3], '%d %b %Y') > datetime(year, month, day), indisFilterByNa)
+    indisFilterByDate = filter(lambda x: datetime.strptime(
+        x[3], '%d %b %Y') > datetime(year, month, day), indisFilterByNa)
 
     listRecentBirths = list(indisFilterByDate)
 
-    recentBirths= []
+    recentBirths = []
     if (len(listRecentBirths) < 1):
         recentBirths.append("No recent births")
     else:
         for indi in listRecentBirths:
-            string = "ID: " + indi[0] + " | Name: " + indi[1] + " | Birth Date: " + indi[3] + " | Age: " + indi[4].__str__() + "\n"
+            string = "ID: " + indi[0] + " | Name: " + indi[1] + \
+                " | Birth Date: " + indi[3] + \
+                " | Age: " + indi[4].__str__() + "\n"
             recentBirths.append(string)
-            errOut=False
+            errOut = False
     return(recentBirths)
 
-#US36	List recent deaths
+# US36	List recent deaths
 
-def listRecentDeads(indis, year= 2000, month = 1, day = 1):
+
+def listRecentDeads(indis, year=2000, month=1, day=1):
     errOut = True
     indiesFilterByNa = filter(lambda x: x[6] != 'N/A', indis)
-    indisFilterByDate = filter(lambda x: datetime.strptime(x[6], '%d %b %Y') > datetime(year, month, day), indiesFilterByNa)
+    indisFilterByDate = filter(lambda x: datetime.strptime(
+        x[6], '%d %b %Y') > datetime(year, month, day), indiesFilterByNa)
 
     listRecentDeads = list(indisFilterByDate)
 
-    recentDeads= []
+    recentDeads = []
     if (len(listRecentDeads) < 1):
         recentDeads.append("No recent deads")
     else:
         for indi in listRecentDeads:
-            string = "ID: " + indi[0] + " | Name: " + indi[1] + " | Dead Date: " + indi[6] + " | Age: " + indi[4].__str__() + "\n"
+            string = "ID: " + indi[0] + " | Name: " + indi[1] + \
+                " | Dead Date: " + indi[6] + \
+                " | Age: " + indi[4].__str__() + "\n"
             recentDeads.append(string)
-            errOut=False
+            errOut = False
     return(recentDeads)
+
 
 def listOrphans(indis, fams):
     orphansList = []
@@ -613,12 +671,16 @@ def listOrphans(indis, fams):
             for child in fam[7]:
                 for indi in indis:
                     if (indi[0] == child):
-                        childBirthDate = datetime.strptime(indi[3], '%d %b %Y').date()
-                        childMinusMomDeath = relativedelta(motherDeathDate, childBirthDate).years
-                        childMinusDadDeath = relativedelta(fatherDeathDate, childBirthDate).years
+                        childBirthDate = datetime.strptime(
+                            indi[3], '%d %b %Y').date()
+                        childMinusMomDeath = relativedelta(
+                            motherDeathDate, childBirthDate).years
+                        childMinusDadDeath = relativedelta(
+                            fatherDeathDate, childBirthDate).years
                         if(childMinusDadDeath < 18 and childMinusMomDeath < 18):
                             orphansList.append(indi[1])
     return(orphansList)
+
 
 def siblingsNotMarried(fams):
     errOut = True
@@ -629,12 +691,14 @@ def siblingsNotMarried(fams):
             if husbID in fami[7]:
                 if wifeID in fami[7]:
                     errOut = False
-                    errors.append("Husband " + fam[4] + " and wife " + fam[6] + " are siblings") #error
+                    errors.append(
+                        "Husband " + fam[4] + " and wife " + fam[6] + " are siblings")  # error
     return(errOut)
+
 
 def main():
     file_path = 'ProjectSampleGedcom.ged'
-    #file_path = 'C:\ProjectSampleGedcom.ged' # for PDS to run in her PC
+    # file_path = 'C:\ProjectSampleGedcom.ged' # for PDS to run in her PC
 
     lines = []
 
@@ -661,8 +725,8 @@ def main():
     largeAgeDiff = largeAgeDifference(fams, indis)
     bornWhenMarried = birthBeforeMarriage(fams, indis)
     ages = lessThan150YearsOld(indis)
-    recentBirths = listRecentBirths(indis, year= 2000, month = 1, day = 1 )
-    recentDeads = listRecentDeads(indis, year= 2000, month = 1, day = 1)
+    recentBirths = listRecentBirths(indis, year=2000, month=1, day=1)
+    recentDeads = listRecentDeads(indis, year=2000, month=1, day=1)
     orphans = listOrphans(indis, fams)
     marriedSiblings = siblingsNotMarried(fams)
 
@@ -698,11 +762,11 @@ def main():
         f.write("\n")
         f.writelines(famStrings)
         f.write("\n")
-        #siblings
+        # siblings
         f.write("\n")
         f.write("Siblings sorted by ages: \n")
         f.writelines(sibligsSortedByAge)
-        #listofDeath
+        # listofDeath
         f.write("\n")
         f.write("Dead People List: \n")
         f.writelines(deathList)
@@ -750,7 +814,7 @@ def main():
             f.write("No individuals over the age of 30 have never been married\n")
         else:
             f.writelines(singles)
-        if(len(largeAgeDiff)< 1):
+        if(len(largeAgeDiff) < 1):
             f.write("No married couples had large age differnces when Married\n")
         else:
             f.writelines(largeAgeDiff)
@@ -762,7 +826,7 @@ def main():
             f.write("No individuals have died after 2000\n")
         else:
             f.writelines(recentDeads)
-        if(len(orphans)< 1):
+        if(len(orphans) < 1):
             f.write("No orphans\n")
         else:
             f.write("Orphans List: \n")
@@ -771,7 +835,6 @@ def main():
             f.write("No siblings are married to each other")
         if(len(errors) > 0):
             f.writelines(errors)
-        
 
 
 if __name__ == "__main__":
